@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Vente de coque pour iPhone</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <script src="assets/js/script.js"></script>
+</head>
+<body>
+
+
+    <header>
+        <a href="index.php"><img src="assets/images/logo.jpg" /></a>
+        <nav>
+            <a href="/index.php">Accueil</a>
+            <a href="/index.php">Notre histoire</a>
+            <a href="/index.php">Nos projets</a>
+            <a href="/index.php">Contact</a>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        <?php if (isset($_SESSION['auth'])): ?>
+            <a href="logout.phtml">Se déconnecter</a>
+        <?php else: ?>
+            <a href="login.phtml">Se connecter</a>
+        <?php endif; ?>
+
+
+        <?php if (Session::getInstance()->hasFlashes()): ?>
+            <?php foreach (Session::getInstance()->getFlashes() as $type => $message): ?>
+                <div class="alert alert-<?= $type; ?>">
+                    <?= $message; ?>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
+    </div>

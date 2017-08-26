@@ -1,0 +1,46 @@
+<?php
+
+require 'inc/bootstrap.php';
+App::getAuth();
+$db = App::getDatabase();
+$auth = App::getAuth();
+$auth->connectFromCookie($db);
+
+
+if (!empty($_POST)){
+    if (empty($_POST['password']) || $_POST['password'] != $_POST['password_confirm']){
+        $_SESSION['flash']['danger'] = "Les mots de passe de correspondent pas";
+    } else {
+        $user_id = $_SESSION['auth']->id;
+        $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+
+        $db->query('UPDATE users SET password = ? WHERE id = ?', [$password, $user_id]);
+        $_SESSION['flash']['success'] = "Votre mot de passe a bien été mis à jour ";
+    }
+}
+
+require 'inc/header.phtml';
+?>
+<main>
+    <h1>Bonjour <?= $_SESSION['auth']->civility?> <?= $_SESSION['auth']->lastname?></h1>
+
+    <form action="" method="POST">
+        <div class="form-group">
+            <input class="form-control" type="password" name="password" placeholder="Changer votre mot de passe">
+        </div>
+
+        <div class="form-group">
+            <input class="form-control" type="password" name="password_confirm" placeholder="Confirmer votre mot de passe">
+        </div>
+
+        <button class="btn btn-success">Changer mon mot de passe</button>
+
+
+
+
+    </form>
+
+</main>
+
+<?php
+include ('inc/footer.phtml');

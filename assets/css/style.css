@@ -1,0 +1,72 @@
+
+*{
+    margin: 0;
+    padding: 0;
+}
+a {
+    text-decoration: none;
+}
+body{
+    color: #3E3D43;
+}
+
+header,
+main,
+footer{
+    width: 80%;
+    margin: 0 auto;
+}
+
+
+header img {
+    display: block;
+    margin: 40px auto;
+}
+header nav,
+footer nav{
+    display: flex;
+    justify-content: space-around;
+    background-color: #3E3D43;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 40px auto;
+}
+header nav a,
+footer nav a{
+    color: #fefefe;
+}
+
+
+main h1{
+    text-align: center;
+    margin: 20px auto;
+}
+main section {
+    display: flex;
+    flex-wrap: wrap;
+}
+main section article {
+    width: 33%;
+    margin: 50px auto;
+}
+main section article img{
+    display: block;
+    width: 50%;
+    margin: 10px auto;
+}
+main section article p{
+    text-align: center;
+    margin: 8px auto;
+}
+main section article p span{
+    padding: 0 20px;
+}
+main section article a{
+    background-color: mediumseagreen;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+.description{
+    font-weight: bold;
+}

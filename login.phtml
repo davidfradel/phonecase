@@ -1,0 +1,57 @@
+<?php
+require ('inc/bootstrap.php');
+$auth = App::getAuth();
+$db = App::getDatabase();
+$auth->connectFromCookie($db);
+
+if ($auth->user()){
+    App::redirect('account.phtml');
+}
+
+if(!empty($_POST) && !empty($_POST['email']) && !empty($_POST['password'])){
+    $user = $auth->login($db, $_POST['email'], $_POST['password'], isset($_POST['remember']));
+    $session = Session::getInstance();
+    if ($user){
+        $session->setFlash('success','Vous êtes maintenant connecté');
+        App::redirect('account.phtml');
+
+    }else{
+        $session->setFlash('danger','Identifiant ou mot de passe incorrect');
+    }
+}
+
+
+?>
+<?php require ('inc/header.phtml'); ?>
+
+<main>
+
+  
+    <h1>Se connecter</h1>
+
+
+    <form method="post" action="">
+        <div class="form-group">
+            <label for="email">Votre email
+            </label>
+            <input type="text" name="email" id="email" class="form-control" />
+        </div>
+
+        <div class="form-group">
+        <label for="password">Votre mot de passe <a href="forget.phtml">(J'ai oublié mon mot de passe)</a> </label>
+        <input type="password" name="password" id="password" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="remember" id="remember" value="1" /> Se souvenir de moi
+            </label>
+        </div>
+
+       <button type="submit" class="btn btn-success">Se connecter</button>
+
+        <p><a href="http://localhost/coque/signin.phtml">Pas encore inscrit ? Cliquez ici</a> </p>
+
+    </form>
+</main>
+<?php require ('inc/footer.phtml');

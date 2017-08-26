@@ -1,0 +1,140 @@
+<?php
+
+include ('inc/bootstrap.php');
+
+$auth = App::getAuth();
+$db = App::getDatabase();
+$auth->connectFromCookie($db);
+
+if (!empty($_POST)){
+
+         $errors = array();
+
+         $db = App::getDatabase();
+         $validator = new Validator($_POST);
+         $validator->isAlpha('lastname', "Le champ nom n'est pas valide");
+         $validator->isAlpha('firstname', "Le champ prénom n'est pas valide");
+         $validator->isAlpha('adress', "Le champ adresse n'est pas valide");
+         $validator->isAlpha('zipcode', "Le champ code postal n'est pas valide");
+         $validator->isAlpha('city', "Le champ ville n'est pas valide");
+         $validator->isAlpha('country', "Le champ pays n'est pas valide");
+         $validator->isEmail('email', "Le champ email n'est pas valide");
+         if ($validator->isValid()){
+             $validator->isUniq('email', $db ,'users', "Cet email est déjà utilisé pour un autre compte !");
+         }
+         $validator->isAlpha('password', "Le champ mot de passe n'est pas valide");
+
+
+
+         if($validator->isValid()){
+
+             App::getAuth()->register($db, $_POST['civility'],$_POST['lastname'], $_POST['firstname'], $_POST['adress'], $_POST['zipcode'], $_POST['city'], $_POST['country'],$_POST['email'], $_POST['password']);
+             
+             Session::getInstance()->setFlash('success',  "Un email de confirmation vous a été envoyé pour valider votre compte");
+             App::redirect('login.phtml');
+         }else {
+             $errors = $validator->getErrors();
+         }
+
+    }
+
+
+include ('inc/header.phtml');
+
+
+     ?>
+<main>
+        <h1>Inscrivez-vous</h1>
+
+     <?php if(!empty($errors)): ?>
+            <div class="alert alert-danger">
+                <p>Vous n'avez pas rempli le formulaire correctement</p>
+                    <ul>
+                        <?php foreach($errors as $error): ?>
+
+                            <li><?= $error ?></li>
+
+                        <?php endforeach; ?>
+
+                    </ul>
+            </div>
+     <?php endif; ?>
+
+
+        <form method="POST" action="">
+
+            <div class="form-group">
+
+                <label for="madame">Madame</label>
+                <input type="radio" name="civility" value="Mme" id="madame" checked="checked" class="radio-inline btn-success" />
+
+                <label for="monsieur">Monsieur</label>
+                <input type="radio" name="civility" value="M." id="monsieur" class="radio-inline btn-success" />
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="lastname">
+                    Votre nom
+                </label>
+                <input type="text" name="lastname" id="lastname"  class="form-control"/>
+            </div>
+
+            <div class="form-group">
+                <label for="firstname">
+                    Votre prénom
+                </label>
+                <input type="text" name="firstname" id="firstname"  class="form-control"/>
+            </div>
+
+
+            <div class="form-group">
+                <label for="email">
+                    Votre email
+                </label>
+                <input type="text" name="email" id="email" class="form-control"/>
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    Votre mot de passe
+                </label>
+                <input type="password" name="password" id="password"  class="form-control"/>
+            </div>
+
+            <div class="form-group">
+                <label for="adress">
+                    Votre adresse
+                </label>
+                <input type="text" name="adress" id="adress"  class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="zipcode">
+                Votre code postal
+                </label>
+                <input type="text" name="zipcode" id="zipcode"  class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="city">
+                    Votre ville
+                </label>
+                <input type="text" name="city" id="city"  class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="country">
+                    Votre pays
+                </label>
+                <input type="text" name="country" id="country"  class="form-control"/>
+            </div>
+
+            <button type="submit" class="btn btn-success">S'inscrire</button>
+
+        </form>
+    </main>
+<?php
+include ('inc/footer.phtml');
+

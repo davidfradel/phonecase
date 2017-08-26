@@ -1,0 +1,39 @@
+<?php
+require ('inc/bootstrap.php');
+
+if(!empty($_POST) && !empty($_POST['email'])){
+    $db = App::getDatabase();
+    $auth = App::getAuth();
+    $session = Session::getInstance();
+    if ($auth->resetPassword($db, $_POST['email'] )){
+        $session->setFlash('success', 'Les instructions de changement de mot de passe vous ont été envoyé par mail');
+        App::redirect('login.phtml');
+    } else {
+        $session->setFlash('danger', 'Aucun compte ne correspondant à cette adresse');
+    }
+    
+}
+
+include ('inc/header.phtml');
+?>
+
+    <main>
+
+
+        <h1>Mot de passe oublié</h1>
+
+
+        <form method="post" action="">
+
+            <div class="form-group">
+                <label for="email">Votre email
+                </label>
+                <input type="email" name="email" id="email" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-success">Réinitialiser mon mot de passe</button>
+
+        </form>
+    </main>
+<?php
+include ('inc/footer.phtml');
