@@ -11,6 +11,7 @@ if ($auth->user()){
 if(!empty($_POST) && !empty($_POST['email']) && !empty($_POST['password'])){
     $user = $auth->login($db, $_POST['email'], $_POST['password'], isset($_POST['remember']));
     $session = Session::getInstance();
+
     if ($user){
         $session->setFlash('success','Vous êtes maintenant connecté');
         App::redirect('account.phtml');
@@ -30,7 +31,7 @@ if(!empty($_POST) && !empty($_POST['email']) && !empty($_POST['password'])){
     <h1>Se connecter</h1>
 
 
-    <form method="post" action="">
+    <form method="post" action="" class="form_style">
         <div class="form-group">
             <label for="email">Votre email
             </label>
@@ -38,7 +39,7 @@ if(!empty($_POST) && !empty($_POST['email']) && !empty($_POST['password'])){
         </div>
 
         <div class="form-group">
-        <label for="password">Votre mot de passe <a href="forget.phtml">(J'ai oublié mon mot de passe)</a> </label>
+            <label for="password">Votre mot de passe <a href="forget.phtml"> (<span class="lien">J'ai oublié mon mot de passe</span>)</a> </label>
         <input type="password" name="password" id="password" class="form-control" />
         </div>
 
@@ -47,10 +48,9 @@ if(!empty($_POST) && !empty($_POST['email']) && !empty($_POST['password'])){
                 <input type="checkbox" name="remember" id="remember" value="1" /> Se souvenir de moi
             </label>
         </div>
+        <button  class="button -green center">Se connecter</button>
 
-       <button type="submit" class="btn btn-success">Se connecter</button>
-
-        <p><a href="http://localhost/coque/signin.phtml">Pas encore inscrit ? Cliquez ici</a> </p>
+        <p><a class="lien" href="http://localhost/coque/signin.phtml">Pas encore inscrit ? Cliquez ici</a> </p>
 
     </form>
 </main>

@@ -4,37 +4,50 @@
     <meta charset="utf-8">
     <title>Vente de coque pour iPhone</title>
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/app.css">
-    <script src="assets/js/script.js"></script>
-</head>
+    <link href="https://fonts.googleapis.com/css?family=Cantarell" rel="stylesheet">
+    </head>
 <body>
 
 
     <header>
-        <a href="index.php"><img src="assets/images/logo.jpg" /></a>
+        <a href="index.php"><img src="assets/images/logo.jpg" alt="logo" /></a>
+        <div class="model">
+            <div class="add"></div>
+            <div class="dropdown">
+                <img src="assets/images/caddie.png" alt="panier" />
+                <div id="cart">
+                    <p><span id="in-cart-items-num">0</span> Article(s)</p>
+                </div>
+
+                <ul id="cart-dropdown" hidden>
+                    <li id="empty-cart-msg"><a>Votre panier est vide</a></li>
+                    <li class="go-to-cart hidden"><a href="/coque/command.phtml">Voir le panier</a></li>
+                </ul>
+            </div>
+        </div>
         <nav>
             <a href="/index.php">Accueil</a>
             <a href="/index.php">Notre histoire</a>
             <a href="/index.php">Nos projets</a>
             <a href="/index.php">Contact</a>
         </nav>
+
+        <div class="model">
+            <div class="add"></div>
+            <?php if (isset($_SESSION['auth'])): ?>
+                <a class="log" href="account.phtml">Mon profil</a>
+                <a class="log" href="logout.phtml">Se déconnecter</a>
+            <?php else: ?>
+                <a class="log" href="login.phtml">Se connecter</a>
+            <?php endif; ?>
+        </div>
+
+            <?php if (Session::getInstance()->hasFlashes()): ?>
+                <?php foreach (Session::getInstance()->getFlashes() as $type => $message): ?>
+                    <div class="alert alert-<?= $type; ?>">
+                        <?= $message; ?>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
     </header>
-
-    <div class="container">
-
-        <?php if (isset($_SESSION['auth'])): ?>
-            <a href="logout.phtml">Se déconnecter</a>
-        <?php else: ?>
-            <a href="login.phtml">Se connecter</a>
-        <?php endif; ?>
-
-
-        <?php if (Session::getInstance()->hasFlashes()): ?>
-            <?php foreach (Session::getInstance()->getFlashes() as $type => $message): ?>
-                <div class="alert alert-<?= $type; ?>">
-                    <?= $message; ?>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-
-    </div>

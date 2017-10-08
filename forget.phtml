@@ -11,10 +11,11 @@ if(!empty($_POST) && !empty($_POST['email'])){
     } else {
         $session->setFlash('danger', 'Aucun compte ne correspondant à cette adresse');
     }
-    
+
 }
 
 include ('inc/header.phtml');
+
 ?>
 
     <main>
@@ -23,7 +24,7 @@ include ('inc/header.phtml');
         <h1>Mot de passe oublié</h1>
 
 
-        <form method="post" action="">
+        <form method="post" action="" class="form_style">
 
             <div class="form-group">
                 <label for="email">Votre email
@@ -31,7 +32,7 @@ include ('inc/header.phtml');
                 <input type="email" name="email" id="email" class="form-control" />
             </div>
 
-            <button type="submit" class="btn btn-success">Réinitialiser mon mot de passe</button>
+            <button type="submit" class="button -green center">Réinitialiser mon mot de passe</button>
 
         </form>
     </main>

@@ -98,7 +98,7 @@ class Auth{
     }
 
     public function login($db, $login, $password, $remember = false){
-        $user = $db->query('SELECT * FROM users WHERE (email = email) AND confirmation_date IS NOT NULL', ['email' => $login])->fetch();
+        $user = $db->query('SELECT * FROM users WHERE (email = :email) AND confirmation_date IS NOT NULL', ['email' => $login])->fetch();
             if (password_verify($password, $user->password)){
                 $this->connect($user);
 
@@ -141,6 +141,57 @@ class Auth{
         return $db->query('SELECT * FROM users WHERE id = ? AND reset_token = ? AND reset_at > DATE_SUB(NOW(), INTERVAL 60 MINUTE)', [$user_id, $token])->fetch();
 
     }
+
+    function getListArticle($db){
+
+
+        $aTab = $db->query('SELECT id, image, description, prix FROM presentation ORDER BY prix DESC')->fetchAll();
+
+
+
+        return $aTab;
+    }
+
+    function logged_only(){
+
+
+    }
+
+
+    function reconnect_from_cookie($db){
+
+        if (session_status() == PHP_SESSION_NONE){
+            session_start();
+        }
+
+
+        if (isset($_COOKIE['remember']) && !isset($_SESSION['auth'])){
+            $remember_token = $_COOKIE['remember'];
+            $parts = explode('==', $remember_token);
+            $user_id =$parts[0];
+            $user = $db->query('SELECT * FROM users WHERE id = ?', [$user_id])->fetch();
+
+
+            if ($user){
+                $expected = $user_id . '==' . $user->remember_token . sha1($user_id . 'parisisburning');
+                if ($expected == $remember_token){
+                    session_start();
+                    $_SESSION['auth'] = $user;
+                    setcookie('remember', $remember_token, time() + 60 * 60 * 24 * 7);
+                } else {
+                    setcookie('remember', NULL, -1);
+                }
+            } else{
+                setcookie('remember', NULL, -1);
+            }
+        }else{
+
+        }
+    }
+
+
+
+
 }
 
 

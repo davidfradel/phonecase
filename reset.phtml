@@ -10,7 +10,7 @@ if (isset($_GET['id']) && isset($_GET['token'])){
            if ($user){
                 if (!empty($_POST)){
                     $validator = new Validator($_POST);
-                    $validator->isAlpha($password);
+                    $validator->isConfirmed('password');
                     if ($validator->isValid()){
                         $password = $auth->hashPassword($_POST['password']);
                         $db->query('UPDATE users SET password = ?, reset_at = NULL, reset_token = NULL WHERE id = ?', [$password], $_GET['id']);
@@ -38,7 +38,7 @@ include ('inc/header.phtml');
         <h1>Réinitialiser mon mot de passe</h1>
 
 
-        <form method="post" action="">
+        <form method="post" action="" class="form_style">
 
             <div class="form-group">
                 <label for="password">Votre mot de passe</label>
@@ -50,7 +50,7 @@ include ('inc/header.phtml');
                 <input type="password" name="password_confirm" id="password" class="form-control" />
             </div>
 
-            <button type="submit" class="btn btn-success">Réinitialiser mon mot de passe</button>
+            <button type="submit" class="button -green center">Réinitialiser mon mot de passe</button>
 
             <p><a href="http://localhost/coque/signin.phtml">Pas encore inscrit ? Cliquez ici</a> </p>
 

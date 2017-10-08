@@ -1,0 +1,103 @@
+<?php
+
+require 'inc/bootstrap.php';
+App::getAuth();
+$db = App::getDatabase();
+$auth = App::getAuth();
+$auth->connectFromCookie($db);
+
+
+
+if (!empty($_POST)){
+    if (empty($_POST['password']) || $_POST['password'] != $_POST['password_confirm']){
+        $_SESSION['flash']['danger'] = "Les mots de passe de correspondent pas";
+    } else {
+        $user_id = $_SESSION['auth']->id;
+        $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+
+        $db->query('UPDATE users SET password = ? WHERE id = ?', [$password, $user_id]);
+        $_SESSION['flash']['success'] = "Votre mot de passe a bien été mis à jour ";
+    }
+}
+
+$user_id = $_SESSION['auth']->id;
+$commandes = $db->query('SELECT mydate, quantite, montant FROM commandes WHERE id_user = "'.$user_id.'" ORDER BY mydate DESC');
+$commandes = $commandes->fetchAll(PDO::FETCH_ASSOC);
+
+$identity = $db->query('SELECT id, email, lastname  FROM users WHERE id = "'.$user_id.'"');
+$identity = $identity->fetch(PDO::FETCH_ASSOC);
+
+
+require 'inc/header.phtml';
+?>
+    <main>
+
+        <h3>Récapitulatif de votre commande</h3>
+        <table class="table">
+            <thead>
+            <tr><th>Article</th><th>Prix</th><th>Quantité</th></tr>
+            </thead>
+            <tbody id="cart-tablebody">
+            </tbody>
+        </table>
+
+        <div class="resume">
+            <p>Sous total : <span class="subtotal"></span>€</p>
+            <p>Frais de port : <span class="fraisdeport">gratuit</span></p>
+            <p>Total : <span class="subtotal total"></span>€</p>
+        </div>
+
+        <form action="/coque/payment.phtml" method="post" id="payment-form">
+            <div class="form-row">
+                <label for="card-element">
+                    <h4>Règlement de votre commande</h4>
+                </label>
+                <div id="card-element">
+                    <!-- a Stripe Element will be inserted here. -->
+                </div>
+
+                <!-- Used to display form errors -->
+                <div id="card-errors" role="alert"></div>
+                <input type="hidden" name="email" value="<?= $identity['email']; ?>">
+                <input type="hidden" name="name" value="<?= $identity['lastname']; ?>">
+                <input type="hidden" name="user" value="<?= $user_id; ?>">
+
+            </div>
+
+            <button class="button -green center" type="submit">Payer ma commande</button>
+        </form>
+
+
+
+        <div class="space"></div>
+
+
+        <h3>Vos commandes précédentes</h3>
+        <table class="allcommandes">
+            <thead>
+            <tr>
+                <th>Date de commande</th>
+                <th>Quantité</th>
+                <th>Montant</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            foreach ($commandes as $iK => $aValues){
+                ?>
+                <tr>
+                    <td><?=$aValues['mydate']; ?></td>
+                    <td><?=$aValues['quantite']; ?></td>
+                    <td><?=$aValues['montant']; ?> €</td>
+                </tr>
+                <?php
+            }
+            ?>
+            </tbody>
+        </table>
+    </main>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="assets/js/stripe.js"></script>
+
+<?php
+include ('inc/footer.phtml');
